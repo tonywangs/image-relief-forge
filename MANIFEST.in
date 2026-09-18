@@ -1,0 +1,5 @@
+include requirements-dev.txt
+recursive-include fixtures *.png *.jpg *.md
+recursive-include scripts *.py
+recursive-include tests *.py
+recursive-include docs *.md

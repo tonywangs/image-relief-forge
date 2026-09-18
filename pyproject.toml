@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image-relief-forge"
+version = "0.1.0"
+description = "Offline, dimensioned image reliefs with reproducible STL validation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26,<3", "Pillow>=10.4,<13"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10", "trimesh>=4.6,<5"]
+
+[project.scripts]
+relief-forge = "image_relief_forge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
