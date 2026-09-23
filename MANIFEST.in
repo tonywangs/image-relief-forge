@@ -3,3 +3,4 @@ recursive-include fixtures *.png *.jpg *.md
 recursive-include scripts *.py
 recursive-include tests *.py
 recursive-include docs *.md
+recursive-include results *.json tests.log

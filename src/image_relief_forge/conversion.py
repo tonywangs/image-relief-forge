@@ -16,6 +16,8 @@ from PIL import Image, ImageOps, UnidentifiedImageError, __version__ as pillow_v
 from . import __version__
 from .geometry import expected_volume, triangulate, write_stl
 from .validation import validate_stl
+from .assembly import validate_assembly
+from .tiling import export_tiles
 
 MAX_INPUT_BYTES = 32 * 1024 * 1024
 MAX_INPUT_PIXELS = 20_000_000
@@ -30,6 +32,8 @@ class Parameters:
     resolution: int = 128
     mode: str = "relief"
     invert: bool = False
+    max_tile_width: float | None = None
+    max_tile_height: float | None = None
 
     def validate(self):
         for name, lower, upper in (("width", 0.1, 2000), ("base", 0.01, 100), ("relief", 0, 100)):
@@ -40,6 +44,13 @@ class Parameters:
             raise ValueError(f"resolution must be an integer between 2 and {MAX_RESOLUTION}")
         if self.mode not in ("relief", "lithophane"):
             raise ValueError("mode must be relief or lithophane")
+        if (self.max_tile_width is None) != (self.max_tile_height is None):
+            raise ValueError("provide both --max-tile-width and --max-tile-height")
+        for name in ("max_tile_width", "max_tile_height"):
+            value = getattr(self, name)
+            if value is not None and (isinstance(value, bool) or not isinstance(value, (float, int)) or
+                                      not math.isfinite(value) or not 0 < value <= 2000):
+                raise ValueError(f"{name} must be finite, greater than zero and at most 2000 mm")
         if not isinstance(self.invert, bool):
             raise ValueError("invert must be boolean")
 
@@ -102,23 +113,35 @@ def convert(input_path, output_directory, parameters: Parameters = Parameters())
     heights = parameters.base + parameters.relief * mapped
     bounds = [[0, 0, 0], [width, depth, float(heights.max())]]
     volume = expected_volume(heights, width, depth)
-    triangles = triangulate(heights, width, depth)
+    tiled = parameters.max_tile_width is not None
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=".relief-forge-", dir=output.parent) as staging:
         stage = Path(staging)
-        stl = stage / "model.stl"
-        write_stl(stl, triangles)
-        validation = validate_stl(stl, expected_bounds=bounds, expected_volume=volume)
-        if not validation["passed"]:
-            failed = [key for key, value in validation["checks"].items() if not value]
-            raise ValueError(f"exported STL failed validation: {', '.join(failed)}")
         # White means maximum configured relief, including in lithophane mode.
         preview = Image.fromarray(np.rint(mapped * 255).astype(np.uint8))
         preview.save(stage / "height.png")
+        if tiled:
+            export_tiles(stage, heights, width, depth, parameters.max_tile_width, parameters.max_tile_height)
+            validation = validate_assembly(stage)
+            artifacts = {"manifest": {"file": "manifest.json"}, "assembly_map": {"file": "assembly.svg"},
+                         "surface": {"file": "surface.npy"}}
+        else:
+            stl = stage / "model.stl"
+            write_stl(stl, triangulate(heights, width, depth))
+            validation = validate_stl(stl, expected_bounds=bounds, expected_volume=volume)
+            artifacts = {"stl": {"file": "model.stl", "sha256": hashlib.sha256(stl.read_bytes()).hexdigest()}}
+        if not validation["passed"]:
+            failed = [key for key, value in validation["checks"].items() if not value]
+            raise ValueError(f"exported STL failed validation: {', '.join(failed)}")
+        artifacts["preview"] = {"file": "height.png", "meaning": "0=base; 255=base+relief; image row orientation"}
+        parameter_info = asdict(parameters)
+        if not tiled:
+            parameter_info.pop("max_tile_width")
+            parameter_info.pop("max_tile_height")
         report = {
-            "schema_version": 1, "generator": {"name": "image-relief-forge", "version": __version__,
+            "schema_version": 2 if tiled else 1, "generator": {"name": "image-relief-forge", "version": __version__,
                                                 "numpy": np.__version__, "pillow": pillow_version},
-            "units": "mm", "input": input_info, "parameters": asdict(parameters),
+            "units": "mm", "input": input_info, "parameters": parameter_info,
             "sampling": {"grid_vertices_xy": [nx, ny], "filter": "Pillow BILINEAR",
                          "spacing_mm_xy": [width / (nx - 1), depth / (ny - 1)]},
             "mapping": {"brightness": "Pillow 8-bit L (encoded RGB luma, not linear light)",
@@ -129,8 +152,7 @@ def convert(input_path, output_directory, parameters: Parameters = Parameters())
             "expected_bounds_mm": bounds, "expected_volume_mm3": volume,
             "surface_height_range_mm": [float(heights.min()), float(heights.max())],
             "validation": validation,
-            "artifacts": {"stl": {"file": "model.stl", "sha256": hashlib.sha256(stl.read_bytes()).hexdigest()},
-                          "preview": {"file": "height.png", "meaning": "0=base; 255=base+relief; image row orientation"}},
+            "artifacts": artifacts,
             "limitations": ["Brightness relief does not recover object geometry.",
                             "Geometry checks do not establish physical print quality.",
                             "STL stores unitless float32 coordinates; import as millimeters."]}
@@ -138,8 +160,8 @@ def convert(input_path, output_directory, parameters: Parameters = Parameters())
         # Exclusive mkdir refuses existing files/directories; staged checks finish first.
         output.mkdir()
         try:
-            for name in ("model.stl", "height.png", "report.json"):
-                shutil.move(str(stage / name), str(output / name))
+            for artifact in sorted(stage.iterdir()):
+                shutil.move(str(artifact), str(output / artifact.name))
         except BaseException:
             shutil.rmtree(output)
             raise

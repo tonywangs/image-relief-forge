@@ -2,7 +2,8 @@
 
 Turn a PNG or JPEG into a dimensioned relief tile or flat lithophane, entirely
 offline after installation. Each conversion creates a closed binary STL, a
-grayscale height preview, and a JSON validation report. No accounts, inference,
+grayscale height preview, and a JSON validation report. Optional tiling creates
+individually closed meshes, a manifest, and an offline assembly map. No accounts, inference,
 image uploads, or external executables are used.
 
 Brightness-based relief **does not recover an object's 3D geometry**. This is a
@@ -42,6 +43,8 @@ errors. Validation errors do not emit a successful conversion bundle.
 | `--resolution` | 128 | Number of grid vertices along the longest image axis, 2–256 |
 | `--mode` | relief | `relief`: white is tall; `lithophane`: black is thick |
 | `--invert` | off | Reverse the selected mode's brightness mapping |
+| `--max-tile-width` | unset | Maximum local X extent per tile, greater than 0 and at most 2000 mm |
+| `--max-tile-height` | unset | Maximum local Y extent per tile, greater than 0 and at most 2000 mm; requires both tile options |
 
 The Y extent is `width × oriented_image_height / oriented_image_width`, also
 restricted to 0.1–2000 mm. Aspect ratio is preserved exactly before float32 STL
@@ -75,7 +78,92 @@ aspect ratios:
 .venv/bin/relief-forge convert fixtures/tall.png --width 0.1 --output outputs/tall
 ```
 
-## Output bundle
+## Tiled reliefs and lithophanes
+
+Supply both build bounds to opt into tiled output. Without them, the original
+single-mesh bundle and STL bytes are preserved. These examples also run in the
+isolated offline installation check:
+
+```sh
+.venv/bin/relief-forge convert fixtures/orientation.png --output outputs/tiled-relief \
+  --width 80 --base 0.8 --relief 2.4 --resolution 64 \
+  --max-tile-width 30 --max-tile-height 25
+.venv/bin/relief-forge convert fixtures/gradient.jpg --output outputs/tiled-lithophane \
+  --width 80 --base 0.8 --relief 2.4 --resolution 64 --mode lithophane \
+  --max-tile-width 30 --max-tile-height 25
+.venv/bin/relief-forge validate-assembly outputs/tiled-lithophane
+```
+
+Open `assembly.svg` in a browser or SVG viewer, offline. It embeds the overall
+preview and shows tile numbers, a filename key, grid extents, dimensions, and
+assembly origins. The diagram is a top view, with +X right and +Y up. The key
+also identifies narrow tiles whose numbers would overlap on the diagram.
+Import each STL in millimeters with its flat bottom at Z=0. **No rotation or
+axis swapping is used to fit the bounds**: width means X and height means Y,
+not thickness. Tiles start at local X=Y=0. Reconstruct the relief by translating
+each tile by its manifest `assembly_origin_mm`; rows start at the bottom (+Y
+increases with row number) and columns start at the left. Do not mirror tiles.
+
+The image is decoded, oriented, composited and resampled **once globally**.
+Partitioning never changes the grid or resamples a crop. Cuts occur only on
+sample grid lines. Along each axis, greedily take as many whole cells as fit the
+bound, starting at the low coordinate; a shorter remainder ends at the high
+coordinate. Float64 ratio noise up to `1e-12` cells is absorbed when deciding an
+exact boundary. This is deterministic but may leave unused build area and
+unequal edge tiles. It does not minimize seams or balance tile sizes. Shared
+boundary samples are included in both neighbors, and each tile gets its own
+bottom and side walls; adjoining tile interiors do not overlap.
+
+At most **256 tiles** are allowed. A bound smaller than one sampled cell fails
+with an actionable error: increase resolution (up to 256), decrease model width,
+or increase the bound. A layout exceeding the tile count also fails before any
+STL is written. Even bounds larger than the whole model produce a tiled bundle
+with one tile when both options are supplied. Errors leave no output bundle.
+
+A tiled bundle contains:
+
+* `tile-rNNN-cNNN.stl`: each closed tile, in local coordinates; rows and columns
+  are one-based. There is no redundant full-size `model.stl` in this bundle.
+* `manifest.json` (schema 1): units, global grid and dimensions, requested bounds,
+  orientation and partition rules, layout, and every tile's inclusive grid vertex
+  extent, assembly translation, physical dimensions including maximum thickness,
+  filename, and SHA-256. Grid Y increases upward, unlike image array rows.
+* `surface.npy`: the original globally sampled physical heights, little-endian
+  float64 in image row order, hashed by the manifest. This reference preserves
+  heights before STL float32 rounding and permits independent reconstruction.
+* `height.png` and self-contained `assembly.svg`: overall preview and assembly key.
+* `report.json` (schema 2): input/mapping/parameters and all per-tile and assembly
+  validation results. The single-mesh report remains schema 1.
+
+`validate-assembly` reloads the manifest, reference grid, and every binary STL;
+it does not trust previously saved validation results. It checks hashes,
+watertightness, winding, volume, nondegenerate triangles and local dimensions,
+then checks actual top triangle vertices/connectivity in assembly coordinates.
+Every specified cell triangle must occur exactly once. Shared vertices must
+agree, and the assembled surface and summed volumes must match the global
+untiled piecewise-linear reference. Tests additionally compare with an actual
+untiled STL loaded through Trimesh. No repair, rounding weld, or mesh cleanup is
+performed; nearest grid indices only identify candidates, whose original
+coordinates are separately checked.
+
+Local bounds use relative tolerance `1e-6` and absolute tolerance `1e-7` mm.
+Requested build maxima allow `1e-7 + 1e-6 × requested_bound` mm of serialization
+error. Surface and seam coordinates allow `1e-7 + 1e-6 × global_axis_extent` mm
+per axis (Z uses maximum height). Volume uses relative tolerance `1e-6` and
+absolute tolerance `1e-9` mm³. Exact shared source heights serialize identically;
+local float32 XY coordinates plus float64 translations can leave tiny numerical
+XY discrepancies. Measured errors appear in the report.
+
+These tolerances describe numerical geometry, **not printer clearance**. The
+manifest/reference hashes detect inconsistent bundle edits, not authenticity or
+agreement with an unavailable source image. `validate-assembly` checks against
+the bundled height field; rerun conversion with the source to establish source
+provenance. Validation proves neither physical fit, successful printing,
+invisible seams, nor optical quality. Connectors, frames, adhesives, assembly
+gaps, printer compensation, bed margins, Z capacity and printing orientation
+optimization are outside this tool's scope.
+
+## Single-mesh output bundle
 
 * `model.stl`: binary, outward-wound triangles with stored unit normals. Fixed
   header, triangle order, and float32 coordinates; no timestamps.
@@ -126,7 +214,11 @@ Inputs are limited to 32 MiB compressed and 20 million decoded pixels. The maxim
 grid is 256 × 256, producing at most 262,140 triangles and 13,107,084 STL bytes.
 The implementation holds arrays in memory; peak memory is larger than the STL
 size, so constrained machines should choose a lower resolution. These limits are
-fixed safeguards, not configurable promises about available RAM. STL float32
+fixed safeguards, not configurable promises about available RAM. Tiling adds
+side walls: the bounded 255-strip workload produces 521,220 triangles across
+255 files. Assembly validation caps total input at 600,000 triangles, 256 tiles,
+a 2 MiB manifest and a 256 × 256 float64 reference; each STL retains the original
+262,140-triangle limit. See the measured workloads below. STL float32
 precision is checked after export. This tool does not add frames, curvature,
 supports, printer profiles, or color-material separation.
 
@@ -161,13 +253,15 @@ separately or use your own images.
 The automated installation check uses a fresh temporary virtual environment,
 installs the wheel with `--no-index`, runs outside the source checkout, disables
 Python socket access during conversion, converts four fixtures twice, and checks
-identical STL bytes:
+identical STL bytes. It also converts the two tiled examples twice, revalidates
+every tile and both assemblies, and compares every artifact byte:
 
 ```sh
 .venv/bin/python scripts/verify_install.py --wheelhouse wheelhouse
 ```
 
-See [validation evidence](docs/validation.md). The socket guard is a test hook,
+Run bounded seeded workloads with `.venv/bin/python scripts/benchmark_tiling.py`.
+See [validation evidence](docs/validation.md) and [recorded measurements](results/tiling-benchmark.json). The socket guard is a test hook,
 not an operating-system sandbox. Wheelhouse files are platform-dependent build
 artifacts and are not checked into the source repository.
 
@@ -186,3 +280,13 @@ documents EXIF transposition.
 [Trimesh's format documentation](https://trimesh.org/formats.html) explains why
 STL triangle soups normally need vertex indexing; this project's independent
 tests avoid its default processing so geometry is not silently repaired.
+
+For related established approaches, [antirez/pngtostl](https://github.com/antirez/pngtostl)
+describes a separate box per pixel, while [LumaLayer](https://github.com/RonenGru/LumaLayer)
+advertises modular grid slicing. The [Image-2-STL lithophane guide](https://www.image-2-stl.com/lithophane-maker/)
+suggests splitting a picture in an image editor. This implementation instead
+partitions one sampled triangular height field and preserves shared boundary
+samples, with a reloadable reference and reconstruction checks. These primary
+project pages were reviewed on 2026-09-23; their features and physical claims
+were not independently benchmarked. No implementation code was copied, and
+neither image-to-STL conversion nor tiling is claimed as novel.

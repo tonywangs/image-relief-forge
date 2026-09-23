@@ -66,8 +66,27 @@ def main():
             assert hashes[0] == hashes[1]
             results.append({"fixture": fixture, "mode": mode, "stl_sha256": hashes[0],
                             "triangles": report["validation"]["triangle_count"]})
+        tiled_results = []
+        for fixture, mode in (("orientation.png", "relief"), ("gradient.jpg", "lithophane")):
+            repeated = []
+            for iteration in range(2):
+                output = work / f"tiled-{fixture}-{iteration}"
+                run([cli, "convert", root / "fixtures" / fixture, "--output", output,
+                     "--width", "80", "--base", "0.8", "--relief", "2.4", "--resolution", "64",
+                     "--mode", mode, "--max-tile-width", "30", "--max-tile-height", "25"], work, env)
+                check = json.loads(run([cli, "validate-assembly", output], work, env))
+                assert check["passed"] and check["tile_count"] > 1
+                repeated.append({p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in output.iterdir()})
+                assert (output / "assembly.svg").is_file()
+                for tile in check["tiles"]:
+                    assert json.loads(run([cli, "validate", output / tile["file"]], work, env))["passed"]
+            assert repeated[0] == repeated[1]
+            tiled_results.append({"fixture": fixture, "mode": mode, "tile_count": check["tile_count"],
+                                  "triangles": check["triangle_count"], "validation": check["checks"],
+                                  "manifest_sha256": repeated[0]["manifest.json"]})
         print(json.dumps({"isolated_install": True, "offline_install": True, "socket_guard": True,
-                          "repeated_stl_bytes_identical": True, "conversions": results}, indent=2))
+                          "repeated_stl_bytes_identical": True, "conversions": results,
+                          "repeated_tiled_bundle_bytes_identical": True, "tiled_conversions": tiled_results}, indent=2))
 
 
 if __name__ == "__main__":

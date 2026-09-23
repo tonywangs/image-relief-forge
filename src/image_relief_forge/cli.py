@@ -5,6 +5,7 @@ import sys
 from . import __version__
 from .conversion import Parameters, convert
 from .validation import validate_stl
+from .assembly import validate_assembly
 
 
 def main(argv=None):
@@ -20,16 +21,21 @@ def main(argv=None):
     build.add_argument("--resolution", type=int, default=128, help="vertices along longest image axis, 2..256 (default: 128)")
     build.add_argument("--mode", choices=["relief", "lithophane"], default="relief")
     build.add_argument("--invert", action="store_true", help="reverse the chosen mode's brightness mapping")
+    build.add_argument("--max-tile-width", type=float, help="maximum tile X extent in mm; requires --max-tile-height")
+    build.add_argument("--max-tile-height", type=float, help="maximum tile Y extent in mm; requires --max-tile-width")
+    assembly = sub.add_parser("validate-assembly", help="reload and check a tiled bundle without repairs")
+    assembly.add_argument("directory")
     check = sub.add_parser("validate", help="check an existing binary STL without repairs; emit JSON")
     check.add_argument("stl")
     args = parser.parse_args(argv)
     try:
-        if args.command == "validate":
-            report = validate_stl(args.stl)
+        if args.command in ("validate", "validate-assembly"):
+            report = validate_stl(args.stl) if args.command == "validate" else validate_assembly(args.directory)
             print(json.dumps(report, indent=2, sort_keys=True, allow_nan=False))
             return 0 if report["passed"] else 1
         params = Parameters(width=args.width, base=args.base, relief=args.relief,
-                            resolution=args.resolution, mode=args.mode, invert=args.invert)
+                            resolution=args.resolution, mode=args.mode, invert=args.invert,
+                            max_tile_width=args.max_tile_width, max_tile_height=args.max_tile_height)
         report = convert(args.input, args.output, params)
         print(json.dumps({"output": args.output, "passed": report["validation"]["passed"],
                           "triangles": report["validation"]["triangle_count"]}, sort_keys=True))

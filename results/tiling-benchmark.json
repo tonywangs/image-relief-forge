@@ -1,0 +1,209 @@
+{
+  "limitations": "single observations; no physical printing, optical evaluation or cross-platform performance claim",
+  "measurement": "convert wall time including export and validation; fresh-process peak RSS including imports and fixture generation",
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "schema_version": 1,
+  "workloads": [
+    {
+      "case": "relief-64",
+      "geometry_checks": {
+        "build_bounds": true,
+        "complete_coverage_without_overlap": true,
+        "manifest_geometry": true,
+        "seam_profiles": true,
+        "surface_connectivity": true,
+        "surface_coordinates": true,
+        "surface_hash": true,
+        "tile_geometry": true,
+        "tile_hashes": true,
+        "untiled_volume": true
+      },
+      "input": {
+        "bounds": [
+          45,
+          30
+        ],
+        "mode": "relief",
+        "resolution": 64,
+        "size": [
+          160,
+          96
+        ],
+        "width": 120
+      },
+      "max_seam_error_mm_xyz": [
+        7.266090022994831e-07,
+        7.216994859504666e-07,
+        0.0
+      ],
+      "max_surface_error_mm_xyz": [
+        1.4532180045989662e-06,
+        9.278993360339882e-07,
+        1.1836781199647817e-07
+      ],
+      "numpy": "2.5.3",
+      "output_bytes": 575158,
+      "output_files": 14,
+      "peak_process_rss_bytes": 44322816,
+      "pillow": "12.3.0",
+      "runtime_seconds": 0.25547535717487335,
+      "seed": 173,
+      "stl_bytes": 526956,
+      "tiles": 9,
+      "triangles": 10524,
+      "volume_error_mm3": 0.0005023079611419234,
+      "volume_mm3": 22460.526507304556
+    },
+    {
+      "case": "lithophane-128",
+      "geometry_checks": {
+        "build_bounds": true,
+        "complete_coverage_without_overlap": true,
+        "manifest_geometry": true,
+        "seam_profiles": true,
+        "surface_connectivity": true,
+        "surface_coordinates": true,
+        "surface_hash": true,
+        "tile_geometry": true,
+        "tile_hashes": true,
+        "untiled_volume": true
+      },
+      "input": {
+        "bounds": [
+          45,
+          30
+        ],
+        "mode": "lithophane",
+        "resolution": 128,
+        "size": [
+          160,
+          96
+        ],
+        "width": 120
+      },
+      "max_seam_error_mm_xyz": [
+        1.7121082223070516e-06,
+        5.019338509271165e-07,
+        0.0
+      ],
+      "max_surface_error_mm_xyz": [
+        1.8622931605705162e-06,
+        9.03480930958267e-07,
+        1.1780682740436532e-07
+      ],
+      "numpy": "2.5.3",
+      "output_bytes": 2176450,
+      "output_files": 14,
+      "peak_process_rss_bytes": 48476160,
+      "pillow": "12.3.0",
+      "runtime_seconds": 0.8559697919990867,
+      "seed": 173,
+      "stl_bytes": 2052956,
+      "tiles": 9,
+      "triangles": 41044,
+      "volume_error_mm3": 0.0005556775231525535,
+      "volume_mm3": 12097.38926877569
+    },
+    {
+      "case": "square-256",
+      "geometry_checks": {
+        "build_bounds": true,
+        "complete_coverage_without_overlap": true,
+        "manifest_geometry": true,
+        "seam_profiles": true,
+        "surface_connectivity": true,
+        "surface_coordinates": true,
+        "surface_hash": true,
+        "tile_geometry": true,
+        "tile_hashes": true,
+        "untiled_volume": true
+      },
+      "input": {
+        "bounds": [
+          70,
+          70
+        ],
+        "mode": "relief",
+        "resolution": 256,
+        "size": [
+          256,
+          256
+        ],
+        "width": 200
+      },
+      "max_seam_error_mm_xyz": [
+        2.9919194446392794e-06,
+        2.9919194446392794e-06,
+        0.0
+      ],
+      "max_surface_error_mm_xyz": [
+        3.5903033079875968e-06,
+        3.5903033079875968e-06,
+        1.1836781199647817e-07
+      ],
+      "numpy": "2.5.3",
+      "output_bytes": 14011939,
+      "output_files": 14,
+      "peak_process_rss_bytes": 74919936,
+      "pillow": "12.3.0",
+      "runtime_seconds": 6.026106008095667,
+      "seed": 173,
+      "stl_bytes": 13311756,
+      "tiles": 9,
+      "triangles": 266220,
+      "volume_error_mm3": 0.008052362798480317,
+      "volume_mm3": 103985.25656160885
+    },
+    {
+      "case": "strips-255",
+      "geometry_checks": {
+        "build_bounds": true,
+        "complete_coverage_without_overlap": true,
+        "manifest_geometry": true,
+        "seam_profiles": true,
+        "surface_connectivity": true,
+        "surface_coordinates": true,
+        "surface_hash": true,
+        "tile_geometry": true,
+        "tile_hashes": true,
+        "untiled_volume": true
+      },
+      "input": {
+        "bounds": [
+          1,
+          255
+        ],
+        "mode": "relief",
+        "resolution": 256,
+        "size": [
+          256,
+          256
+        ],
+        "width": 255
+      },
+      "max_seam_error_mm_xyz": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_surface_error_mm_xyz": [
+        0.0,
+        0.0,
+        1.1836781199647817e-07
+      ],
+      "numpy": "2.5.3",
+      "output_bytes": 27234177,
+      "output_files": 260,
+      "peak_process_rss_bytes": 50507776,
+      "pillow": "12.3.0",
+      "runtime_seconds": 31.10157017898746,
+      "seed": 173,
+      "stl_bytes": 26082420,
+      "tiles": 255,
+      "triangles": 521220,
+      "volume_error_mm3": 0.00014537462266162038,
+      "volume_mm3": 169041.01975321776
+    }
+  ]
+}

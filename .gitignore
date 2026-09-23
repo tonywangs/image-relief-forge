@@ -6,3 +6,5 @@ build/
 dist/
 wheelhouse/
 outputs/
+*.log
+!results/tests.log

@@ -11,7 +11,8 @@ checks; physical print quality and optical performance have not been tested.
 .venv/bin/python -m pytest -q
 ```
 
-Observed result: **70 passed**. The suite covers independent Trimesh reloads in
+Observed result: **137 passed** (52.29 seconds on the shared verification host).
+Plain pytest output is saved in [`results/tests.log`](../results/tests.log). The suite covers independent Trimesh reloads in
 both modes, analytic constant-tile volumes, gradients in PNG/JPEG, exact corner
 orientation, EXIF rotation, transparent and palette inputs, single-pixel axes,
 1000:1 aspect ratios, zero relief, the full 256 × 256 grid, deterministic bundles,
@@ -41,8 +42,10 @@ The source distribution and wheel built successfully; `pip check` found no
 broken requirements. The installation script created an empty virtual
 environment and installed only local wheels with `--no-index`. The CLI ran
 outside the source tree with Python socket access disabled. It completed eight
-conversions (two per input), generated previews and reports, revalidated each
-STL through the installed CLI, and found identical repeated STL bytes.
+single-mesh conversions (two per input), plus four tiled conversions (two per
+example). It generated previews, reports and assembly maps, revalidated each
+STL and both assemblies through the installed CLI, and found identical repeated
+STL bytes and identical bytes for every tiled-bundle artifact.
 
 All four installation cases used width 80 mm, base 0.8 mm, relief 2.4 mm, and
 resolution 64. The observed hashes are below; changing the input, parameters,
@@ -59,3 +62,77 @@ The socket guard covers Python socket operations, not arbitrary native-code
 network activity. The current conversion pipeline uses only local files,
 Pillow, and NumPy. macOS, Windows, other Python/dependency versions, general STL
 self-intersections, and physical printing remain unverified.
+
+## Tiled geometry and negative cases
+
+The tiled tests reload all STLs through Trimesh with `process=False`, index exact
+coordinates only, and compare assembled top triangle connectivity, vertices,
+heights and total volume with a separately exported untiled STL. Coverage includes
+both modes; asymmetric four-corner markers; PNG/JPEG gradients; black, gray and
+white constants; alpha compositing; both extreme-aspect fixtures; uneven grid
+divisions; exact build-boundary dimensions; one-tile and 256-tile layouts; zero
+relief; and analytic constant volumes under all mode/invert combinations.
+Four pinned-environment golden hashes confirm unchanged historical single-mesh
+STL bytes. The original 70 regressions still run.
+
+Damaged-bundle tests reject removed tiles, overlapping placements, altered
+translations and dimensions, too-small build limits, incorrect hashes and changed
+heights. A height edit with an updated STL hash and regenerated normals still
+fails the surface/seam checks. Changing a cell diagonal leaves a valid closed
+solid and matching vertex positions, but correctly fails the expected surface
+connectivity/coverage checks. Rejected inputs also include malformed manifests,
+wrong schema/counts, oversized reference-grid headers, duplicate filenames,
+path traversal names and symlinked tile files. Invalid tile settings and layouts
+leave no published output directory, including when final assembly validation
+fails. The validator does not rely on a previously saved `passed` result.
+
+The two documented installed examples each produced six tiles:
+
+| Input / mode | Total triangles | Manifest SHA-256 |
+| --- | ---: | --- |
+| `orientation.png` / relief | 10,272 | `c8d47f4b0cf8abca87028796f36000c136c91cfa504ae027670447cbc29e7a78` |
+| `gradient.jpg` / lithophane | 8,688 | `3d141807c4cf53d8cbb5736c133542148da2dd8f919d79cc660bc42e4a9f8303` |
+
+The installation uses the README parameters: width 80 mm, base 0.8 mm, relief
+2.4 mm, resolution 64, maximum tile width 30 mm and height 25 mm. Every local
+STL passed geometry validation; every assembly passed bounds, hashes, seam,
+coverage, surface and volume checks. All artifacts were byte-identical on repeat.
+SVG tests parse the XML, check embedded preview data and verify that the key
+contains every tile ID. Browser-specific visual rendering is not verified.
+
+## Bounded synthetic measurements
+
+```sh
+.venv/bin/python scripts/benchmark_tiling.py
+```
+
+[`results/tiling-benchmark.json`](../results/tiling-benchmark.json) contains actual
+measurements, input settings, seed 173, dependency versions and geometry results.
+Each workload generates a deterministic random RGBA image locally and launches
+in a fresh process. Conversion wall time includes sampling, export, independent
+STL validation and assembly reconstruction. Peak resident memory comes from
+`resource.getrusage(RUSAGE_SELF)` and includes interpreter imports and fixture
+generation. There is no inference, private input or external dataset.
+
+| Workload | Tiles | Triangles | Runtime (s) | Peak RSS (MiB) | Bundle bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| relief, resolution 64 | 9 | 10,524 | 0.255 | 42.27 | 575,158 |
+| lithophane, resolution 128 | 9 | 41,044 | 0.856 | 46.23 | 2,176,450 |
+| square, resolution 256 | 9 | 266,220 | 6.026 | 71.45 | 14,011,939 |
+| 255 one-cell-wide strips, resolution 256 | 255 | 521,220 | 31.102 | 48.17 | 27,234,177 |
+
+Every workload passed all recorded geometry checks. The largest observed
+coordinate errors were approximately `3.59e-6` mm against the unquantized surface
+and `2.99e-6` mm across seams in X/Y. Seam Z differences were exactly zero; surface
+Z rounding error was at most `1.19e-7` mm. The largest absolute total-volume error
+was about `0.00806` mm³ on a volume of about `103985.26` mm³, within the documented
+relative tolerance. Exact numbers remain in the JSON.
+
+These are single observations on a shared Linux host, with other verification
+processes running during part of the measurements. They are not controlled
+performance comparisons, throughput guarantees or hardware sizing guidance.
+Only the small results JSON is retained; all large generated meshes live in
+temporary directories and are removed. The benchmark's RSS measurement depends
+on Unix `resource`; the application itself does not. Physical fit, successful
+printing, seam visibility and optical quality have not been tested. Numerical
+agreement is not evidence of those properties.
