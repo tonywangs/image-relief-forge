@@ -20,15 +20,23 @@ def main(argv=None):
     build.add_argument("--relief", type=float, default=3, help="brightness-driven added thickness in mm (default: 3)")
     build.add_argument("--resolution", type=int, default=128, help="vertices along longest image axis, 2..256 (default: 128)")
     build.add_argument("--mode", choices=["relief", "lithophane"], default="relief")
+    build.add_argument("--3mf", dest="three_mf", action="store_true", help="also export and independently validate an assembly-positioned 3MF")
     build.add_argument("--invert", action="store_true", help="reverse the chosen mode's brightness mapping")
     build.add_argument("--max-tile-width", type=float, help="maximum tile X extent in mm; requires --max-tile-height")
     build.add_argument("--max-tile-height", type=float, help="maximum tile Y extent in mm; requires --max-tile-width")
     assembly = sub.add_parser("validate-assembly", help="reload and check a tiled bundle without repairs")
     assembly.add_argument("directory")
+    mf = sub.add_parser("validate-3mf", help="validate a generated 3MF bundle against its STL/source artifacts")
+    mf.add_argument("directory")
     check = sub.add_parser("validate", help="check an existing binary STL without repairs; emit JSON")
     check.add_argument("stl")
     args = parser.parse_args(argv)
     try:
+        if args.command == "validate-3mf":
+            from .validation_3mf import validate_3mf
+            report = validate_3mf(args.directory)
+            print(json.dumps(report, indent=2, sort_keys=True, allow_nan=False))
+            return 0 if report["passed"] else 1
         if args.command in ("validate", "validate-assembly"):
             report = validate_stl(args.stl) if args.command == "validate" else validate_assembly(args.directory)
             print(json.dumps(report, indent=2, sort_keys=True, allow_nan=False))
@@ -36,7 +44,7 @@ def main(argv=None):
         params = Parameters(width=args.width, base=args.base, relief=args.relief,
                             resolution=args.resolution, mode=args.mode, invert=args.invert,
                             max_tile_width=args.max_tile_width, max_tile_height=args.max_tile_height)
-        report = convert(args.input, args.output, params)
+        report = convert(args.input, args.output, params, three_mf=args.three_mf)
         print(json.dumps({"output": args.output, "passed": report["validation"]["passed"],
                           "triangles": report["validation"]["triangle_count"]}, sort_keys=True))
         return 0

@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 139.6138028940186,
+  "python": "3.12.3",
+  "summary": "367 passed in 138.28s (0:02:18)"
+}

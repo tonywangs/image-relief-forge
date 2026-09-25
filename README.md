@@ -33,6 +33,15 @@ overwritten. The CLI returns 0 for success, 1 for a failed STL validation, and 2
 for invalid arguments, unreadable input, conversion validation failure, or I/O
 errors. Validation errors do not emit a successful conversion bundle.
 
+## Optional 3MF
+
+Add `--3mf` after installing `.[three-mf]` to retain the STLs and also produce a
+named, millimeter-unit 3MF. It is independently read with consortium lib3mf
+before the bundle is accepted. Tiled packages preserve **assembly positions,
+not a print-bed arrangement**; the assembled extent can exceed tile build bounds.
+See [the format, examples, limits and one-command verification](docs/3mf.md).
+No slicer interoperability or physical printing is claimed.
+
 ## Controls and units
 
 | Option | Default | Meaning / range |

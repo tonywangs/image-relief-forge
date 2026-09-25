@@ -94,7 +94,9 @@ def read_image(path: Path):
                    "oriented_size_px": list(image.size)}
 
 
-def convert(input_path, output_directory, parameters: Parameters = Parameters()) -> dict:
+def convert(input_path, output_directory, parameters: Parameters = Parameters(), *, three_mf: bool = False) -> dict:
+    if not isinstance(three_mf, bool):
+        raise ValueError("three_mf must be boolean")
     parameters.validate()
     input_path, output = Path(input_path), Path(output_directory)
     if output.exists() or output.is_symlink():
@@ -133,6 +135,14 @@ def convert(input_path, output_directory, parameters: Parameters = Parameters())
         if not validation["passed"]:
             failed = [key for key, value in validation["checks"].items() if not value]
             raise ValueError(f"exported STL failed validation: {', '.join(failed)}")
+        if three_mf:
+            from .three_mf import export_3mf
+            from .validation_3mf import validate_3mf
+            artifact = export_3mf(stage)
+            artifact["validation"] = validate_3mf(stage)
+            if not artifact["validation"]["passed"]:
+                raise ValueError("3MF round-trip validation failed")
+            artifacts["3mf"] = artifact
         artifacts["preview"] = {"file": "height.png", "meaning": "0=base; 255=base+relief; image row orientation"}
         parameter_info = asdict(parameters)
         if not tiled:

@@ -1,0 +1,247 @@
+{
+  "dependencies": {
+    "Pillow": "12.3.0",
+    "lib3mf": "2.5.0",
+    "numpy": "2.5.3"
+  },
+  "limitations": "Shared-host observations, not performance guarantees. No slicer or physical validation.",
+  "measurement": "Two sequential conversions per fresh worker; wall time includes all STL/3MF export and validation. Peak RSS covers both conversions, imports and fixture generation.",
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "workloads": [
+    {
+      "assembly": null,
+      "bundle_bytes": 2077055,
+      "case": "single-64",
+      "checks": {
+        "build_count": true,
+        "identities": true,
+        "lib3mf_manifold_oriented": true,
+        "mesh_count": true,
+        "mesh_geometry": true,
+        "millimeter_units": true,
+        "object_count": true,
+        "source_triangles": true,
+        "strict_reader_without_warnings": true,
+        "transforms": true
+      },
+      "input": {
+        "bounds": [
+          30,
+          25
+        ],
+        "resolution": 64,
+        "tiled": false,
+        "width": 80
+      },
+      "meshes": 1,
+      "package_bytes": 1250527,
+      "package_sha256": "4d8c4dfae98b87e1e9df6a080cf487889858acebc5a339d0434bd29deb9e758b",
+      "peak_process_rss_bytes": 72839168,
+      "repeatable": true,
+      "runtime_seconds": [
+        1.7871079822070897,
+        1.5916812038049102
+      ],
+      "seed": 173,
+      "triangles": 16380
+    },
+    {
+      "assembly": null,
+      "bundle_bytes": 34217374,
+      "case": "single-256",
+      "checks": {
+        "build_count": true,
+        "identities": true,
+        "lib3mf_manifold_oriented": true,
+        "mesh_count": true,
+        "mesh_geometry": true,
+        "millimeter_units": true,
+        "object_count": true,
+        "source_triangles": true,
+        "strict_reader_without_warnings": true,
+        "transforms": true
+      },
+      "input": {
+        "bounds": [
+          70,
+          70
+        ],
+        "resolution": 256,
+        "tiled": false,
+        "width": 200
+      },
+      "meshes": 1,
+      "package_bytes": 21040671,
+      "package_sha256": "03f0fccb01067b86d00c0e465ce3107d5a95f991ef930516faa081c46993898d",
+      "peak_process_rss_bytes": 325582848,
+      "repeatable": true,
+      "runtime_seconds": [
+        51.58319993503392,
+        96.69209150108509
+      ],
+      "seed": 173,
+      "triangles": 262140
+    },
+    {
+      "assembly": {
+        "checks": {
+          "build_bounds": true,
+          "complete_coverage_without_overlap": true,
+          "manifest_geometry": true,
+          "seam_profiles": true,
+          "surface_connectivity": true,
+          "surface_coordinates": true,
+          "surface_hash": true,
+          "tile_geometry": true,
+          "tile_hashes": true,
+          "untiled_volume": true
+        },
+        "max_seam_error_mm_xyz": [
+          0.0,
+          1.9073486328125e-06,
+          0.0
+        ],
+        "max_surface_error_mm_xyz": [
+          4.265252059099112e-06,
+          2.463032885202665e-06,
+          7.068409635380135e-08
+        ],
+        "passed": true,
+        "reference_volume_mm3": 20147.958029563117,
+        "scope": "serialized topology, build bounds, seam samples, cell coverage, surface triangles and volume; no repairs; no physical fit or optical claim",
+        "shared_vertex_observations": 776,
+        "tile_count": 15,
+        "tolerances": {
+          "coordinate_atol_mm": 1e-07,
+          "coordinate_rtol": 1e-06,
+          "surface_seam_atol_mm_xyz": [
+            0.00012009999999999999,
+            0.00012009999999999999,
+            2.1141176470588234e-06
+          ],
+          "volume_atol_mm3": 1e-09,
+          "volume_rtol": 1e-06
+        },
+        "triangle_count": 68580,
+        "volume_error_mm3": 0.00022428164083976299,
+        "volume_mm3": 20147.958253844758
+      },
+      "bundle_bytes": 8812161,
+      "case": "tiled-128",
+      "checks": {
+        "build_count": true,
+        "identities": true,
+        "lib3mf_manifold_oriented": true,
+        "mesh_count": true,
+        "mesh_geometry": true,
+        "millimeter_units": true,
+        "object_count": true,
+        "reconstructed_assembly": true,
+        "source_triangles": true,
+        "strict_reader_without_warnings": true,
+        "transforms": true
+      },
+      "input": {
+        "bounds": [
+          45,
+          30
+        ],
+        "resolution": 128,
+        "tiled": true,
+        "width": 120
+      },
+      "meshes": 15,
+      "package_bytes": 5168874,
+      "package_sha256": "cc143ae1c5473a2796a6225d028fa4ff69582b8a1e826a572ec3ecd2c81e7a2d",
+      "peak_process_rss_bytes": 115654656,
+      "repeatable": true,
+      "runtime_seconds": [
+        24.913198051042855,
+        9.313204857055098
+      ],
+      "seed": 173,
+      "triangles": 68580
+    },
+    {
+      "assembly": {
+        "checks": {
+          "build_bounds": true,
+          "complete_coverage_without_overlap": true,
+          "manifest_geometry": true,
+          "seam_profiles": true,
+          "surface_connectivity": true,
+          "surface_coordinates": true,
+          "surface_hash": true,
+          "tile_geometry": true,
+          "tile_hashes": true,
+          "untiled_volume": true
+        },
+        "max_seam_error_mm_xyz": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_surface_error_mm_xyz": [
+          0.0,
+          0.0,
+          1.1836781199647817e-07
+        ],
+        "passed": true,
+        "reference_volume_mm3": 91058.98039215687,
+        "scope": "serialized topology, build bounds, seam samples, cell coverage, surface triangles and volume; no repairs; no physical fit or optical claim",
+        "shared_vertex_observations": 65024,
+        "tile_count": 255,
+        "tolerances": {
+          "coordinate_atol_mm": 1e-07,
+          "coordinate_rtol": 1e-06,
+          "surface_seam_atol_mm_xyz": [
+            0.00025509999999999997,
+            0.00025509999999999997,
+            3.1870588235294114e-06
+          ],
+          "volume_atol_mm3": 1e-09,
+          "volume_rtol": 1e-06
+        },
+        "triangle_count": 521220,
+        "volume_error_mm3": 9.285523265134543e-05,
+        "volume_mm3": 91058.9804850121
+      },
+      "bundle_bytes": 57651590,
+      "case": "strips-255",
+      "checks": {
+        "build_count": true,
+        "identities": true,
+        "lib3mf_manifold_oriented": true,
+        "mesh_count": true,
+        "mesh_geometry": true,
+        "millimeter_units": true,
+        "object_count": true,
+        "reconstructed_assembly": true,
+        "source_triangles": true,
+        "strict_reader_without_warnings": true,
+        "transforms": true
+      },
+      "input": {
+        "bounds": [
+          1,
+          255
+        ],
+        "resolution": 256,
+        "tiled": true,
+        "width": 255
+      },
+      "meshes": 255,
+      "package_bytes": 30204958,
+      "package_sha256": "3cc25508f0859ffea97930d01841ef16092b0b43653aa1b238d05a7f608c7405",
+      "peak_process_rss_bytes": 483516416,
+      "repeatable": true,
+      "runtime_seconds": [
+        81.39489295193925,
+        128.98724161996506
+      ],
+      "seed": 173,
+      "triangles": 521220
+    }
+  ]
+}
