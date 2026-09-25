@@ -10,6 +10,29 @@ Brightness-based relief **does not recover an object's 3D geometry**. This is a
 rectangular thickness map with a flat bottom. Geometry checks **do not establish
 physical print quality**; no physical prints have been validated.
 
+## Arrange tiles on rectangular print beds
+
+The offline `layout` command packs an existing tiled conversion into deterministic
+bed-specific 3MF packages, labeled SVG previews, and a placement manifest with
+transforms back to the original assembly. For example:
+
+```sh
+relief-forge layout outputs/tiles --output outputs/beds --bed-width 220 \
+  --bed-height 180 --margin 5 --clearance 2 --rotate
+relief-forge validate-layout outputs/beds
+```
+
+Install the `three-mf` extra first. `outputs/tiles` must be a tiled conversion
+bundle; see [complete single-bed and multi-bed examples](docs/layout.md).
+The documented shelf heuristic is bounded and deterministic, without an optimal
+bed-count claim. It verifies geometric clearance with lib3mf; brims, supports,
+toolhead clearance, sequential-print safety, slicers and printing are untested.
+Existing `convert --3mf` continues to export assembly positions.
+
+Run the combined verification with `.venv/bin/python scripts/verify_layout.py
+--record results/layout-verification.json`. See [the layout contract and
+measurement procedure](docs/layout.md) for tolerances, limits and evidence.
+
 ## Install and try it
 
 Python 3.10+ is required; the verification environment is Python 3.12 on Linux.

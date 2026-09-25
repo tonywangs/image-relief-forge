@@ -19,7 +19,7 @@ from .geometry import write_stl
 from .validation import validate_stl
 
 
-def preflight(path):
+def preflight(path, *, layout=False):
     """Bound native parser inputs before handing them to lib3mf."""
     if path.is_symlink() or not path.is_file() or path.stat().st_size > fmt.MAX_BYTES:
         raise ValueError("3MF package exceeds resource limits or is missing")
@@ -69,8 +69,11 @@ def preflight(path):
         if item.tag != q("item") or set(item.attrib) != {"objectid", "transform"} or item.get("objectid") != str(index) or len(item):
             raise ValueError("unsupported build reference")
         transform = np.array([float(x) for x in item.get("transform", "").split()])
-        if transform.shape != (12,) or not np.isfinite(transform).all() or not np.array_equal(transform[:9], np.eye(3).ravel()) or np.any(np.abs(transform[9:]) > 2000):
-            raise ValueError("expected bounded translation-only assembly transform")
+        rotation_ok = np.array_equal(transform[:9], np.eye(3).ravel()) or (
+            layout and np.array_equal(transform[:9], [0, 1, 0, -1, 0, 0, 0, 0, 1]))
+        if transform.shape != (12,) or not np.isfinite(transform).all() or not rotation_ok or np.any(np.abs(transform[9:]) > 2000):
+            raise ValueError("expected bounded quarter-turn bed transform" if layout else
+                             "expected bounded translation-only assembly transform")
 
 
 def validate_3mf(directory):

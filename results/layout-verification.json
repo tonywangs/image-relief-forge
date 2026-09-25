@@ -1,0 +1,1085 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "elapsed_seconds": 205.51181172695942,
+      "exit_code": 0,
+      "test_output": "........................................................................ [ 11%]\n........................................................................ [ 23%]\n........................................................................ [ 35%]\n........................................................................ [ 46%]\n........................................................................ [ 58%]\n........................................................................ [ 70%]\n........................................................................ [ 81%]\n........................................................................ [ 93%]\n.......................................                                  [100%]\n615 passed in 204.84s (0:03:24)\n"
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "build",
+        "--no-isolation"
+      ],
+      "elapsed_seconds": 2.3389010049868375,
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "elapsed_seconds": 0.5574268968775868,
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "pip",
+        "wheel",
+        "--no-index",
+        "--no-build-isolation",
+        "--no-deps",
+        "--wheel-dir",
+        "wheelhouse",
+        "."
+      ],
+      "elapsed_seconds": 1.784866354893893,
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python",
+        "scripts/verify_install.py",
+        "--wheelhouse",
+        "wheelhouse"
+      ],
+      "elapsed_seconds": 53.81774232396856,
+      "exit_code": 0,
+      "result": {
+        "conversions": [
+          {
+            "3mf_sha256": "a3658ab7f17be00287a6aebc0ddde04b45b64b97d33465527624fa2b33085874",
+            "fixture": "gradient.png",
+            "mode": "relief",
+            "stl_sha256": "21d6c8baf03b0b47d7fda131225c536e791eb749c9515d38e2b9eb46d289c00d",
+            "triangles": 8188
+          },
+          {
+            "3mf_sha256": "dc0a130a4f4a72a14664c651af59cfd6e1d36f193f8d681b5195cc538ab14d67",
+            "fixture": "gradient.jpg",
+            "mode": "lithophane",
+            "stl_sha256": "0d4ed6a58ee741404b9aa5419d9ea11d1773081b0afcafcca42d223c5381475f",
+            "triangles": 8188
+          },
+          {
+            "3mf_sha256": "5c2c842df69fe3786415c1541be73ef0b3653c437c4fbad7613cc9ac01214f63",
+            "fixture": "orientation.png",
+            "mode": "relief",
+            "stl_sha256": "65d870acf42024c4a324f1b0c0c3329acf6be38a6b4c39b667ea28c6e78bf594",
+            "triangles": 9724
+          },
+          {
+            "3mf_sha256": "23203d3f837366aaae537aa817728b9f1d4e1e4534a7bad175b575c6f5416f9b",
+            "fixture": "transparent.png",
+            "mode": "lithophane",
+            "stl_sha256": "6fd5dccdda63f3f3a7557bb9be493e069dc5bdbf47d7dedf33627dedb827153b",
+            "triangles": 8188
+          }
+        ],
+        "isolated_install": true,
+        "offline_install": true,
+        "repeated_stl_bytes_identical": true,
+        "repeated_tiled_bundle_bytes_identical": true,
+        "socket_guard": true,
+        "tiled_conversions": [
+          {
+            "fixture": "orientation.png",
+            "manifest_sha256": "c8d47f4b0cf8abca87028796f36000c136c91cfa504ae027670447cbc29e7a78",
+            "mode": "relief",
+            "tile_count": 6,
+            "triangles": 10272,
+            "validation": {
+              "build_bounds": true,
+              "complete_coverage_without_overlap": true,
+              "manifest_geometry": true,
+              "seam_profiles": true,
+              "surface_connectivity": true,
+              "surface_coordinates": true,
+              "surface_hash": true,
+              "tile_geometry": true,
+              "tile_hashes": true,
+              "untiled_volume": true
+            }
+          },
+          {
+            "fixture": "gradient.jpg",
+            "manifest_sha256": "3d141807c4cf53d8cbb5736c133542148da2dd8f919d79cc660bc42e4a9f8303",
+            "mode": "lithophane",
+            "tile_count": 6,
+            "triangles": 8688,
+            "validation": {
+              "build_bounds": true,
+              "complete_coverage_without_overlap": true,
+              "manifest_geometry": true,
+              "seam_profiles": true,
+              "surface_connectivity": true,
+              "surface_coordinates": true,
+              "surface_hash": true,
+              "tile_geometry": true,
+              "tile_hashes": true,
+              "untiled_volume": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "python",
+        "scripts/benchmark_3mf.py"
+      ],
+      "elapsed_seconds": 202.12928390596062,
+      "exit_code": 0,
+      "historical_package_hashes_unchanged": true,
+      "result": {
+        "dependencies": {
+          "Pillow": "12.3.0",
+          "lib3mf": "2.5.0",
+          "numpy": "2.5.3"
+        },
+        "limitations": "Shared-host observations, not performance guarantees. No slicer or physical validation.",
+        "measurement": "Two sequential conversions per fresh worker; wall time includes all STL/3MF export and validation. Peak RSS covers both conversions, imports and fixture generation.",
+        "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+        "python": "3.12.3",
+        "workloads": [
+          {
+            "assembly": null,
+            "bundle_bytes": 2077055,
+            "case": "single-64",
+            "checks": {
+              "build_count": true,
+              "identities": true,
+              "lib3mf_manifold_oriented": true,
+              "mesh_count": true,
+              "mesh_geometry": true,
+              "millimeter_units": true,
+              "object_count": true,
+              "source_triangles": true,
+              "strict_reader_without_warnings": true,
+              "transforms": true
+            },
+            "input": {
+              "bounds": [
+                30,
+                25
+              ],
+              "resolution": 64,
+              "tiled": false,
+              "width": 80
+            },
+            "meshes": 1,
+            "package_bytes": 1250527,
+            "package_sha256": "4d8c4dfae98b87e1e9df6a080cf487889858acebc5a339d0434bd29deb9e758b",
+            "peak_process_rss_bytes": 72712192,
+            "repeatable": true,
+            "runtime_seconds": [
+              1.6713007770013064,
+              1.647019922034815
+            ],
+            "seed": 173,
+            "triangles": 16380
+          },
+          {
+            "assembly": null,
+            "bundle_bytes": 34217374,
+            "case": "single-256",
+            "checks": {
+              "build_count": true,
+              "identities": true,
+              "lib3mf_manifold_oriented": true,
+              "mesh_count": true,
+              "mesh_geometry": true,
+              "millimeter_units": true,
+              "object_count": true,
+              "source_triangles": true,
+              "strict_reader_without_warnings": true,
+              "transforms": true
+            },
+            "input": {
+              "bounds": [
+                70,
+                70
+              ],
+              "resolution": 256,
+              "tiled": false,
+              "width": 200
+            },
+            "meshes": 1,
+            "package_bytes": 21040671,
+            "package_sha256": "03f0fccb01067b86d00c0e465ce3107d5a95f991ef930516faa081c46993898d",
+            "peak_process_rss_bytes": 325484544,
+            "repeatable": true,
+            "runtime_seconds": [
+              29.173108994029462,
+              29.455945051042363
+            ],
+            "seed": 173,
+            "triangles": 262140
+          },
+          {
+            "assembly": {
+              "checks": {
+                "build_bounds": true,
+                "complete_coverage_without_overlap": true,
+                "manifest_geometry": true,
+                "seam_profiles": true,
+                "surface_connectivity": true,
+                "surface_coordinates": true,
+                "surface_hash": true,
+                "tile_geometry": true,
+                "tile_hashes": true,
+                "untiled_volume": true
+              },
+              "max_seam_error_mm_xyz": [
+                0.0,
+                1.9073486328125e-06,
+                0.0
+              ],
+              "max_surface_error_mm_xyz": [
+                4.265252059099112e-06,
+                2.463032885202665e-06,
+                7.068409635380135e-08
+              ],
+              "passed": true,
+              "reference_volume_mm3": 20147.958029563117,
+              "scope": "serialized topology, build bounds, seam samples, cell coverage, surface triangles and volume; no repairs; no physical fit or optical claim",
+              "shared_vertex_observations": 776,
+              "tile_count": 15,
+              "tolerances": {
+                "coordinate_atol_mm": 1e-07,
+                "coordinate_rtol": 1e-06,
+                "surface_seam_atol_mm_xyz": [
+                  0.00012009999999999999,
+                  0.00012009999999999999,
+                  2.1141176470588234e-06
+                ],
+                "volume_atol_mm3": 1e-09,
+                "volume_rtol": 1e-06
+              },
+              "triangle_count": 68580,
+              "volume_error_mm3": 0.00022428164083976299,
+              "volume_mm3": 20147.958253844758
+            },
+            "bundle_bytes": 8812161,
+            "case": "tiled-128",
+            "checks": {
+              "build_count": true,
+              "identities": true,
+              "lib3mf_manifold_oriented": true,
+              "mesh_count": true,
+              "mesh_geometry": true,
+              "millimeter_units": true,
+              "object_count": true,
+              "reconstructed_assembly": true,
+              "source_triangles": true,
+              "strict_reader_without_warnings": true,
+              "transforms": true
+            },
+            "input": {
+              "bounds": [
+                45,
+                30
+              ],
+              "resolution": 128,
+              "tiled": true,
+              "width": 120
+            },
+            "meshes": 15,
+            "package_bytes": 5168874,
+            "package_sha256": "cc143ae1c5473a2796a6225d028fa4ff69582b8a1e826a572ec3ecd2c81e7a2d",
+            "peak_process_rss_bytes": 115879936,
+            "repeatable": true,
+            "runtime_seconds": [
+              7.620349826989695,
+              7.1996694470290095
+            ],
+            "seed": 173,
+            "triangles": 68580
+          },
+          {
+            "assembly": {
+              "checks": {
+                "build_bounds": true,
+                "complete_coverage_without_overlap": true,
+                "manifest_geometry": true,
+                "seam_profiles": true,
+                "surface_connectivity": true,
+                "surface_coordinates": true,
+                "surface_hash": true,
+                "tile_geometry": true,
+                "tile_hashes": true,
+                "untiled_volume": true
+              },
+              "max_seam_error_mm_xyz": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "max_surface_error_mm_xyz": [
+                0.0,
+                0.0,
+                1.1836781199647817e-07
+              ],
+              "passed": true,
+              "reference_volume_mm3": 91058.98039215687,
+              "scope": "serialized topology, build bounds, seam samples, cell coverage, surface triangles and volume; no repairs; no physical fit or optical claim",
+              "shared_vertex_observations": 65024,
+              "tile_count": 255,
+              "tolerances": {
+                "coordinate_atol_mm": 1e-07,
+                "coordinate_rtol": 1e-06,
+                "surface_seam_atol_mm_xyz": [
+                  0.00025509999999999997,
+                  0.00025509999999999997,
+                  3.1870588235294114e-06
+                ],
+                "volume_atol_mm3": 1e-09,
+                "volume_rtol": 1e-06
+              },
+              "triangle_count": 521220,
+              "volume_error_mm3": 9.285523265134543e-05,
+              "volume_mm3": 91058.9804850121
+            },
+            "bundle_bytes": 57651590,
+            "case": "strips-255",
+            "checks": {
+              "build_count": true,
+              "identities": true,
+              "lib3mf_manifold_oriented": true,
+              "mesh_count": true,
+              "mesh_geometry": true,
+              "millimeter_units": true,
+              "object_count": true,
+              "reconstructed_assembly": true,
+              "source_triangles": true,
+              "strict_reader_without_warnings": true,
+              "transforms": true
+            },
+            "input": {
+              "bounds": [
+                1,
+                255
+              ],
+              "resolution": 256,
+              "tiled": true,
+              "width": 255
+            },
+            "meshes": 255,
+            "package_bytes": 30204958,
+            "package_sha256": "3cc25508f0859ffea97930d01841ef16092b0b43653aa1b238d05a7f608c7405",
+            "peak_process_rss_bytes": 483188736,
+            "repeatable": true,
+            "runtime_seconds": [
+              60.41630823095329,
+              62.024273792048916
+            ],
+            "seed": 173,
+            "triangles": 521220
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "python",
+        "scripts/benchmark_layout.py",
+        "--wheelhouse",
+        "wheelhouse"
+      ],
+      "elapsed_seconds": 92.36803992697969,
+      "exit_code": 0,
+      "result": {
+        "dependencies": {
+          "Pillow": "12.3.0",
+          "image-relief-forge": "0.1.0",
+          "lib3mf": "2.5.0",
+          "numpy": "2.5.3"
+        },
+        "isolated_install": true,
+        "limitations": "Shared-host observations; Python socket audit guard is not a native network sandbox. Linux-only benchmark runner; no slicer or physical tests.",
+        "measurement": "Each workload has a fresh worker and isolated installed CLI child processes. Layout wall times include startup, snapshot, packing, serialization and strict validation. Peak RSS is the maximum child process RSS across conversion, two layouts, two revalidations and a collision check, not their sum; Linux ru_maxrss KiB converted to bytes.",
+        "offline_install": true,
+        "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+        "python": "3.12.3",
+        "python_socket_guard": true,
+        "workloads": [
+          {
+            "artifacts": {
+              "bed-001.3mf": {
+                "bytes": 57123,
+                "sha256": "d8c219240bd76e2f15155ed1d4f74683c105082ff5260a744b0ff4b19b3f91aa"
+              },
+              "bed-001.svg": {
+                "bytes": 3058,
+                "sha256": "35239bfee85de0ec0d0135d0d98d839fc5c75aefd5ab87964bb77e12d8c9c879"
+              },
+              "layout.json": {
+                "bytes": 9956,
+                "sha256": "a532fc05dfd3c501a65889ea4cd5e74b45d313cd0ae791f26df5a914c7d0c508"
+              },
+              "source/manifest.json": {
+                "bytes": 5680,
+                "sha256": "8ee31aea6616e80f5d0f8b101a0343871fe9183335c24e1f4d83a1767ddab25e"
+              },
+              "source/surface.npy": {
+                "bytes": 1408,
+                "sha256": "52a77ae616712455ab93dfcc5ea4b0ef1303eda1bd53171038246e27499a6af7"
+              },
+              "source/tile-r001-c001.stl": {
+                "bytes": 5884,
+                "sha256": "13cdc56a57c9fc0c686e8e9c96127de8b3d0f7e60f457e5e7fdee6ad75644d2f"
+              },
+              "source/tile-r001-c002.stl": {
+                "bytes": 5884,
+                "sha256": "3c961919c515bfc7573ff0d02c76da99702b043c8e5ef009f102044f3f8cdb23"
+              },
+              "source/tile-r001-c003.stl": {
+                "bytes": 5884,
+                "sha256": "7ba7527becc7542075f9ea33ed9d86bdb9e7ee9ae5cb543d6bd1a4a75ad65e30"
+              },
+              "source/tile-r002-c001.stl": {
+                "bytes": 5884,
+                "sha256": "a4a30d17627afe6c9ddcfa5d7090b0d9caea283c16863be670d445ed2fe971e9"
+              },
+              "source/tile-r002-c002.stl": {
+                "bytes": 5884,
+                "sha256": "3c961919c515bfc7573ff0d02c76da99702b043c8e5ef009f102044f3f8cdb23"
+              },
+              "source/tile-r002-c003.stl": {
+                "bytes": 5884,
+                "sha256": "6fcdf606963a576d3b65ba8d7b6eaf56e2b8b1ba9da4733b681e78352005b5a8"
+              },
+              "source/tile-r003-c001.stl": {
+                "bytes": 2284,
+                "sha256": "8e00c5f23b8734166f3f1174a94aea9c8ec6e4a33990bca40369de621294d107"
+              },
+              "source/tile-r003-c002.stl": {
+                "bytes": 2284,
+                "sha256": "0d773e8ab11b1fbd6f6a0c4d9c877a984a318f59f7f985f4cc987516c2b8e385"
+              },
+              "source/tile-r003-c003.stl": {
+                "bytes": 2284,
+                "sha256": "4faffcf0c42978ba4955a1d82ad9222d2ba51f9e6524d81db1c01cc12d359168"
+              },
+              "validation.json": {
+                "bytes": 4240,
+                "sha256": "3b26615658d50fa3493f5d09c11d6595137d2da435bd3f4702437a93f47a6ea4"
+              }
+            },
+            "bed_count": 1,
+            "bundle_bytes": 123621,
+            "case": "single-bed",
+            "collision_exit_code": 2,
+            "conversion_seconds": 0.5399142890237272,
+            "fixture_sha256": "a02631c682e39cc23b1ac46782c491d2bcae66126d62b0a86ef10ae175e05480",
+            "layout_seconds": [
+              0.6612970631103963,
+              0.7350561809726059
+            ],
+            "parameters": {
+              "bed": [
+                180,
+                180
+              ],
+              "clearance": 2,
+              "margin": 3,
+              "resolution": 16,
+              "rotate": false,
+              "tile": [
+                30,
+                25
+              ],
+              "width": 80
+            },
+            "peak_cli_process_rss_bytes": 50106368,
+            "repeated_bundle_bytes_identical": true,
+            "revalidation": [
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 0.573622239055112
+              },
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 0.5484592400025576
+              }
+            ],
+            "tile_count": 9,
+            "utilization": [
+              0.11851851922494386
+            ]
+          },
+          {
+            "artifacts": {
+              "bed-001.3mf": {
+                "bytes": 281956,
+                "sha256": "76b3cb7c7d20625e710b94c8c25743cdc1e23b98dd98b6fea64c51fc0cd29f1e"
+              },
+              "bed-001.svg": {
+                "bytes": 1206,
+                "sha256": "935a03b0db158012b8095484f58d952f94195d6ae5aabaaec15ade490400c226"
+              },
+              "bed-002.3mf": {
+                "bytes": 468342,
+                "sha256": "ae59b74a94afa63a1ce926e60322ec322fb90d806662a4af5b5ed1e2ffe767ff"
+              },
+              "bed-002.svg": {
+                "bytes": 1836,
+                "sha256": "755f422d6927d3904413b201a2a5227faaa03c2b8bf7e1c563ca3f2beb844e7e"
+              },
+              "layout.json": {
+                "bytes": 7267,
+                "sha256": "3e0860392da567d270c036ecbed5f1f360f9612099c3dad422b87a92c1e7a2be"
+              },
+              "source/manifest.json": {
+                "bytes": 4054,
+                "sha256": "7971dc27410748f337b5a1f408c944a4d8c5383db0f8da90a487e0d1ed2b2af3"
+              },
+              "source/surface.npy": {
+                "bytes": 19584,
+                "sha256": "45178b24631641ad7ac09bbc5d79ed9c839f4a9cba5ad48f05dec3387317aafb"
+              },
+              "source/tile-r001-c001.stl": {
+                "bytes": 95884,
+                "sha256": "f396433960b6a67a41b0a61242123730538345f52ab7b98336e039be397ddf51"
+              },
+              "source/tile-r001-c002.stl": {
+                "bytes": 95884,
+                "sha256": "7bce1cc6b0b94452054185641403e8638baba0129842aca3652f0f5b98c32d09"
+              },
+              "source/tile-r001-c003.stl": {
+                "bytes": 71884,
+                "sha256": "97d84704bd4a6b23023a8b5c6d2fe97a862c6bc02f78c110179b6b0199712f5b"
+              },
+              "source/tile-r002-c001.stl": {
+                "bytes": 91084,
+                "sha256": "6ffdb8618ce28fe3b0de5bbcdb223f43056c1f5d0e0ec8fde73e3b3c415434a5"
+              },
+              "source/tile-r002-c002.stl": {
+                "bytes": 91084,
+                "sha256": "93f57403ea4f1517b096a986e11f92e4589c035828a764d730ac3a45f4a18b35"
+              },
+              "source/tile-r002-c003.stl": {
+                "bytes": 68284,
+                "sha256": "4bc86db8e6a916be87b635b44c09326dea1d210fa1110f4bc9236cbc771e5daf"
+              },
+              "validation.json": {
+                "bytes": 3185,
+                "sha256": "5d4f4e26db9491c78fa26959af1967d168ca8a7228c128c6f75e32e577c4a006"
+              }
+            },
+            "bed_count": 2,
+            "bundle_bytes": 1301534,
+            "case": "multi-bed",
+            "collision_exit_code": 2,
+            "conversion_seconds": 0.7217158279381692,
+            "fixture_sha256": "a02631c682e39cc23b1ac46782c491d2bcae66126d62b0a86ef10ae175e05480",
+            "layout_seconds": [
+              1.6235061229672283,
+              1.5724108808208257
+            ],
+            "parameters": {
+              "bed": [
+                65,
+                50
+              ],
+              "clearance": 1,
+              "margin": 2,
+              "resolution": 64,
+              "rotate": true,
+              "tile": [
+                30,
+                25
+              ],
+              "width": 80
+            },
+            "peak_cli_process_rss_bytes": 54239232,
+            "repeated_bundle_bytes_identical": true,
+            "revalidation": [
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 1.0179820300545543
+              },
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 1.0016200060490519
+              }
+            ],
+            "tile_count": 6,
+            "utilization": [
+              0.44301356126527,
+              0.7385248721031195
+            ]
+          },
+          {
+            "artifacts": {
+              "bed-001.3mf": {
+                "bytes": 1006104,
+                "sha256": "532feb1fe92048329cc61f90cfc9fe34feeb8edf21f65235b6ba23c94a783422"
+              },
+              "bed-001.svg": {
+                "bytes": 2322,
+                "sha256": "26e2ff2a7d0bcb6c76a9da6abd08c5d203a0c213c9f5c743e8ecd5087e5a3954"
+              },
+              "bed-002.3mf": {
+                "bytes": 966106,
+                "sha256": "61c2fa3e0d7e3a6a89fc224927980ef622e41dfaed36df5a5c3f177991560b18"
+              },
+              "bed-002.svg": {
+                "bytes": 2002,
+                "sha256": "6ddd41678ec6c2d4a00061a6d46a62c1fe403cc247ad297156f7e4679fa6ba92"
+              },
+              "bed-003.3mf": {
+                "bytes": 553621,
+                "sha256": "6665d04bfde2ad16622c2ad0afb4280a7ea1c00094827fe67fb971799662fc09"
+              },
+              "bed-003.svg": {
+                "bytes": 1116,
+                "sha256": "8460fcbae00df5fa9db971bf74eb0384957e61aff67b333a930edfe98bec49b7"
+              },
+              "bed-004.3mf": {
+                "bytes": 554274,
+                "sha256": "b1d8a80d7d78bd6757fbe1011b2727d4711f7d38e98f129a38e9849294eaa7b9"
+              },
+              "bed-004.svg": {
+                "bytes": 1116,
+                "sha256": "bc91cda30f2b324dbcfe9986c44460cae1284e21600ef79762950f180803527a"
+              },
+              "layout.json": {
+                "bytes": 17111,
+                "sha256": "cdc5ad08d7b5a00a125ab50a148ede002867755c8f9d460434bd002078d217c5"
+              },
+              "source/manifest.json": {
+                "bytes": 8904,
+                "sha256": "8458fb23e54318f29bc09af7fb22f25e04a8ebda4958ff3388f3c2ac6b442de2"
+              },
+              "source/surface.npy": {
+                "bytes": 78976,
+                "sha256": "3dd38bbe38f110991f4a9f5ec439eb37e7face75fc5eca18968bf21e8db1b91c"
+              },
+              "source/tile-r001-c001.stl": {
+                "bytes": 185484,
+                "sha256": "7ef9fc4882e809662979270edf81c0692477d4e5e4117d16a26c10d6ab8cfd38"
+              },
+              "source/tile-r001-c002.stl": {
+                "bytes": 185484,
+                "sha256": "8e8b1f716d6befc2d7ca3b0567cd00685db8a56c749d48989b1fbff3e9c258a3"
+              },
+              "source/tile-r001-c003.stl": {
+                "bytes": 185484,
+                "sha256": "8e8b1f716d6befc2d7ca3b0567cd00685db8a56c749d48989b1fbff3e9c258a3"
+              },
+              "source/tile-r001-c004.stl": {
+                "bytes": 185484,
+                "sha256": "0b153eec14651033e9e90faff7609f34d5ddcf02f994471f3cc9fbc31e51c6e7"
+              },
+              "source/tile-r001-c005.stl": {
+                "bytes": 23084,
+                "sha256": "c1f0140065579b74ffe5ab5e1080a10d2c72fa7d97380201984f6441160edac4"
+              },
+              "source/tile-r002-c001.stl": {
+                "bytes": 185484,
+                "sha256": "afd9d23e629764902598f63bc2edc0298893dc93b66186582b14f7db62539ca5"
+              },
+              "source/tile-r002-c002.stl": {
+                "bytes": 185484,
+                "sha256": "8e8b1f716d6befc2d7ca3b0567cd00685db8a56c749d48989b1fbff3e9c258a3"
+              },
+              "source/tile-r002-c003.stl": {
+                "bytes": 185484,
+                "sha256": "8e8b1f716d6befc2d7ca3b0567cd00685db8a56c749d48989b1fbff3e9c258a3"
+              },
+              "source/tile-r002-c004.stl": {
+                "bytes": 185484,
+                "sha256": "d19d3a2c5a6a176bb1e8a846bce0fc43ef2b98dabf847a382f94f03a737ea638"
+              },
+              "source/tile-r002-c005.stl": {
+                "bytes": 23084,
+                "sha256": "b4330336320ce59c012e84f0dd2705497d67f67de45d4ee8215a877f5ffba5ef"
+              },
+              "source/tile-r003-c001.stl": {
+                "bytes": 134284,
+                "sha256": "5e096a2ff5c49d4e38d57b0533bf8d442f4027b7563668d0405fc79005a84416"
+              },
+              "source/tile-r003-c002.stl": {
+                "bytes": 134284,
+                "sha256": "7b255ceb79a79c71dfb5299f3eadf5c7294dbeecb79aa3dc4ae59d454c85a797"
+              },
+              "source/tile-r003-c003.stl": {
+                "bytes": 134284,
+                "sha256": "7b255ceb79a79c71dfb5299f3eadf5c7294dbeecb79aa3dc4ae59d454c85a797"
+              },
+              "source/tile-r003-c004.stl": {
+                "bytes": 134284,
+                "sha256": "6c49b42ec0ad291aff526325f0be70460d2fc60a65f0d644c0f0afe2e5969525"
+              },
+              "source/tile-r003-c005.stl": {
+                "bytes": 16684,
+                "sha256": "bd2f88d4612e97270517882fdd3e7e82936acd20a73e803ad4e19be8fa834935"
+              },
+              "validation.json": {
+                "bytes": 6546,
+                "sha256": "c83cc05c81d2fd4c6b2b3e49c3b4d26486dda04ca482e3a4cedfd86d9d700dd7"
+              }
+            },
+            "bed_count": 4,
+            "bundle_bytes": 5282058,
+            "case": "dense-128",
+            "collision_exit_code": 2,
+            "conversion_seconds": 1.261166363954544,
+            "fixture_sha256": "a02631c682e39cc23b1ac46782c491d2bcae66126d62b0a86ef10ae175e05480",
+            "layout_seconds": [
+              4.857738340040669,
+              4.884320250013843
+            ],
+            "parameters": {
+              "bed": [
+                100,
+                85
+              ],
+              "clearance": 2,
+              "margin": 3,
+              "resolution": 128,
+              "rotate": true,
+              "tile": [
+                45,
+                40
+              ],
+              "width": 180
+            },
+            "peak_cli_process_rss_bytes": 61181952,
+            "repeated_bundle_bytes_identical": true,
+            "revalidation": [
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 2.389965930953622
+              },
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 2.415934457909316
+              }
+            ],
+            "tile_count": 15,
+            "utilization": [
+              0.7449764870403948,
+              0.7193856921520183,
+              0.41134834236395545,
+              0.41134834236395545
+            ]
+          },
+          {
+            "artifacts": {
+              "bed-001.3mf": {
+                "bytes": 8551683,
+                "sha256": "10b2ae3b8417c0161216f85645b13d7e263b51c503ece92954faf05fcf457361"
+              },
+              "bed-001.svg": {
+                "bytes": 1716,
+                "sha256": "434f95461b01c501eab3bd45283f02690cd984a94ab963b4658f2371118b2914"
+              },
+              "bed-002.3mf": {
+                "bytes": 3807955,
+                "sha256": "aabcc365adbd7ec8c6252dd964c0e35f8c9229b0e72e26ab57854da1c86a5d21"
+              },
+              "bed-002.svg": {
+                "bytes": 1841,
+                "sha256": "89e11aa5f984e9ae5eced37f102bfeb4503045a3a25f1173e9db577c4017f151"
+              },
+              "layout.json": {
+                "bytes": 10281,
+                "sha256": "82b8c742302ff1712c8b30483653494e5dbb69ab250d976f98a0ac1d139120c5"
+              },
+              "source/manifest.json": {
+                "bytes": 5687,
+                "sha256": "82d66ef82e741096ee8aac986be7d2a15ddff3aed7295e1ec98e74597817be00"
+              },
+              "source/surface.npy": {
+                "bytes": 315520,
+                "sha256": "b4a5754b9800fccb7a08cb1da08828dd35df178fbe411b81b813958d2e734a29"
+              },
+              "source/tile-r001-c001.stl": {
+                "bytes": 1385884,
+                "sha256": "e768538a0586f5ff63fe65015c01a9ae1e94b13494df9d9c9eac37f3b7c670a1"
+              },
+              "source/tile-r001-c002.stl": {
+                "bytes": 1385884,
+                "sha256": "0a3492e21000c5ed95f8e12ba8fa7bc02efd9eb2880b5499b8961fc361d4cb69"
+              },
+              "source/tile-r001-c003.stl": {
+                "bytes": 1201084,
+                "sha256": "71adba550998b174e0a347129fe45587708e02c1789f021d7430d89c0d09e8c8"
+              },
+              "source/tile-r002-c001.stl": {
+                "bytes": 1385884,
+                "sha256": "95fcac043b7b392c41a4b16e5cfe93d507101730390517d09ff4dcceaeed7054"
+              },
+              "source/tile-r002-c002.stl": {
+                "bytes": 1385884,
+                "sha256": "0a3492e21000c5ed95f8e12ba8fa7bc02efd9eb2880b5499b8961fc361d4cb69"
+              },
+              "source/tile-r002-c003.stl": {
+                "bytes": 1201084,
+                "sha256": "53d0b69b9287304d2e0cff69f511bbf93fc0ce41f86550a43b026766587ba938"
+              },
+              "source/tile-r003-c001.stl": {
+                "bytes": 35884,
+                "sha256": "b5e186dd7d7e2c3e9d9c709533110af40c952ad433850f77b537321f28c715b2"
+              },
+              "source/tile-r003-c002.stl": {
+                "bytes": 35884,
+                "sha256": "2276fa4a5e20232f46f3ebacb4ac2a2557abc0db9e6b638c66e575e23c266bf4"
+              },
+              "source/tile-r003-c003.stl": {
+                "bytes": 31084,
+                "sha256": "ba387f641f90df64f87440acf3641b2c545f2cc490fbee02aa2c6a4cddf33353"
+              },
+              "validation.json": {
+                "bytes": 4283,
+                "sha256": "02a91759565ac3ee893c22334f44f094a43fd746fd3f9288bb0ceb9c5a42a09b"
+              }
+            },
+            "bed_count": 2,
+            "bundle_bytes": 20747522,
+            "case": "fine-256",
+            "collision_exit_code": 2,
+            "conversion_seconds": 3.9484641570597887,
+            "fixture_sha256": "a02631c682e39cc23b1ac46782c491d2bcae66126d62b0a86ef10ae175e05480",
+            "layout_seconds": [
+              18.34180876100436,
+              18.139669440919533
+            ],
+            "parameters": {
+              "bed": [
+                150,
+                130
+              ],
+              "clearance": 1.5,
+              "margin": 4,
+              "resolution": 256,
+              "rotate": true,
+              "tile": [
+                70,
+                60
+              ],
+              "width": 200
+            },
+            "peak_cli_process_rss_bytes": 150626304,
+            "repeated_bundle_bytes_identical": true,
+            "revalidation": [
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 8.679326244164258
+              },
+              {
+                "checks": {
+                  "artifact_hashes": true,
+                  "assembly_reconstruction": true,
+                  "bed_contact": true,
+                  "bed_containment": true,
+                  "exactly_once": true,
+                  "footprint_metadata": true,
+                  "identities": true,
+                  "lib3mf_manifold_oriented": true,
+                  "manifest_transforms": true,
+                  "millimeter_units": true,
+                  "object_counts": true,
+                  "pairwise_clearance": true,
+                  "rigid_transforms": true,
+                  "source_assembly": true,
+                  "source_hashes": true,
+                  "source_manifest_hash": true,
+                  "source_triangles": true,
+                  "strict_reader_without_warnings": true,
+                  "unchanged_dimensions": true,
+                  "unchanged_volume": true,
+                  "utilization": true
+                },
+                "elapsed_seconds": 8.284671545960009
+              }
+            ],
+            "tile_count": 9,
+            "utilization": [
+              0.8535100042468939,
+              0.37725923984932275
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "elapsed_seconds": 0.007020643912255764,
+      "exit_code": 0
+    }
+  ],
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3"
+}

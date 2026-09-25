@@ -28,10 +28,35 @@ def main(argv=None):
     assembly.add_argument("directory")
     mf = sub.add_parser("validate-3mf", help="validate a generated 3MF bundle against its STL/source artifacts")
     mf.add_argument("directory")
+    layout = sub.add_parser("layout", help="arrange a tiled bundle on rectangular beds, with validated bed 3MFs")
+    layout.add_argument("directory")
+    layout.add_argument("--output", required=True)
+    layout.add_argument("--bed-width", type=float, required=True)
+    layout.add_argument("--bed-height", type=float, required=True)
+    layout.add_argument("--margin", type=float, default=0)
+    layout.add_argument("--clearance", type=float, default=0)
+    layout.add_argument("--rotate", action="store_true", help="allow 90-degree counterclockwise rotation")
+    layout.add_argument("--max-tiles", type=int, default=256)
+    layout.add_argument("--max-beds", type=int, default=256)
+    check_layout = sub.add_parser("validate-layout", help="independently verify bed packages and assembly transforms")
+    check_layout.add_argument("directory")
     check = sub.add_parser("validate", help="check an existing binary STL without repairs; emit JSON")
     check.add_argument("stl")
     args = parser.parse_args(argv)
     try:
+        if args.command == "layout":
+            from .layout import LayoutParameters, create_layout
+            params = LayoutParameters(args.bed_width, args.bed_height, args.margin, args.clearance,
+                                      args.rotate, args.max_tiles, args.max_beds)
+            report = create_layout(args.directory, args.output, params)
+            print(json.dumps({"output": args.output, "bed_count": report["bed_count"],
+                              "tile_count": report["tile_count"], "beds": report["beds"]}, sort_keys=True))
+            return 0
+        if args.command == "validate-layout":
+            from .validation_layout import validate_layout
+            report = validate_layout(args.directory)
+            print(json.dumps(report, indent=2, sort_keys=True, allow_nan=False))
+            return 0 if report["passed"] else 1
         if args.command == "validate-3mf":
             from .validation_3mf import validate_3mf
             report = validate_3mf(args.directory)

@@ -47,6 +47,10 @@ def source_entries(directory):
         entries = [(t["id"], t["file"], t["assembly_origin_mm"]) for t in tiles]
     else:
         entries = [("model", "model.stl", [0, 0, 0])]
+    return validate_entries(entries)
+
+
+def validate_entries(entries):
     if not 1 <= len(entries) <= MAX_MESHES:
         raise ValueError("3MF mesh count limit exceeded")
     seen = set()
@@ -74,10 +78,18 @@ def read_stl(path):
     return triangles
 
 
-def export_3mf(directory):
-    """Add model.3mf to a private staging bundle, refusing any existing file."""
+def export_3mf(directory, *, entries=None, transforms=None, destination=None):
+    """Export a deterministic package, optionally with explicit bed build transforms.
+
+    Defaults preserve the assembly-positioned model.3mf API and exact bytes.
+    Every destination is opened exclusively.
+    """
     directory = Path(directory)
-    entries = source_entries(directory)
+    entries = source_entries(directory) if entries is None else validate_entries(entries)
+    if transforms is not None:
+        transforms = np.asarray(transforms, dtype=np.float64)
+        if transforms.shape != (len(entries), 4, 3) or not np.isfinite(transforms).all():
+            raise ValueError("invalid 3MF transforms")
     xml = LimitedBuffer()
     def emit(line):
         xml.write((line + "\n").encode("utf-8"))
@@ -102,6 +114,8 @@ def export_3mf(directory):
     emit('</resources><build>')
     for index, (_, _, origin) in enumerate(entries, 1):
         transform = "1 0 0 0 1 0 0 0 1 " + " ".join(map(number, origin))
+        if transforms is not None:
+            transform = " ".join(map(number, transforms[index - 1].ravel()))
         emit(f'<item objectid="{index}" transform="{transform}"/>')
     emit('</build></model>')
     package = LimitedBuffer()
@@ -111,7 +125,7 @@ def export_3mf(directory):
             info.create_system = 3
             info.external_attr = 0o100644 << 16
             archive.writestr(info, data)
-    path = directory / "model.3mf"
+    path = directory / "model.3mf" if destination is None else Path(destination)
     try:
         with path.open("xb") as stream:
             try:
@@ -123,4 +137,4 @@ def export_3mf(directory):
         raise ValueError("3MF output already exists") from exc
     return {"file": path.name, "sha256": hashlib.sha256(package.getvalue()).hexdigest(),
             "bytes": path.stat().st_size, "core_specification": "1.3.0",
-            "coordinates": "assembly positions; not a print-bed arrangement", "mesh_count": len(entries)}
+            "coordinates": "assembly positions; not a print-bed arrangement" if transforms is None else "explicit build transforms", "mesh_count": len(entries)}
