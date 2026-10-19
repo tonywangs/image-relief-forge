@@ -3,12 +3,29 @@
 Turn a PNG or JPEG into a dimensioned relief tile or flat lithophane, entirely
 offline after installation. Each conversion creates a closed binary STL, a
 grayscale height preview, and a JSON validation report. Optional tiling creates
-individually closed meshes, a manifest, and an offline assembly map. No accounts, inference,
-image uploads, or external executables are used.
+individually closed meshes, a manifest, and an offline assembly map. Core conversion uses no accounts, inference, image uploads or external executables.
+The optional inspection example invokes an independently installed PrusaSlicer.
 
 Brightness-based relief **does not recover an object's 3D geometry**. This is a
 rectangular thickness map with a flat bottom. Geometry checks **do not establish
 physical print quality**; no physical prints have been validated.
+
+## Try a real photograph
+
+[Make a four-tile Moon lithophane](docs/moon.md) from the included, provenance-documented
+NASA/JPL/USGS photograph. One command reproduces a 120 × 120 mm assembly, two
+bed-specific 3MF files, labeled previews and independent PrusaSlicer CLI inspection:
+
+```sh
+.venv/bin/python scripts/demo_moon.py --output outputs/my-moon
+```
+
+Install development dependencies and PrusaSlicer first; see the walkthrough.
+[View the assembly](docs/moon/assembly.svg), [bed 1](docs/moon/bed-001.svg),
+[bed 2](docs/moon/bed-002.svg) and [a sliced layer](docs/moon/bed-001-layer.svg).
+Both beds were sliced successfully with PrusaSlicer 2.7.2; dimensions and
+placements survived import/re-export. This is headless CLI evidence, not a GUI
+or physical printing claim. [Measured results](results/moon-inspection.json).
 
 ## Arrange tiles on rectangular print beds
 
@@ -26,7 +43,8 @@ Install the `three-mf` extra first. `outputs/tiles` must be a tiled conversion
 bundle; see [complete single-bed and multi-bed examples](docs/layout.md).
 The documented shelf heuristic is bounded and deterministic, without an optimal
 bed-count claim. It verifies geometric clearance with lib3mf; brims, supports,
-toolhead clearance, sequential-print safety, slicers and printing are untested.
+toolhead clearance, sequential-print safety and physical printing are untested.
+The Moon example below has independent PrusaSlicer CLI evidence.
 Existing `convert --3mf` continues to export assembly positions.
 
 Run the combined verification with `.venv/bin/python scripts/verify_layout.py
@@ -63,7 +81,8 @@ named, millimeter-unit 3MF. It is independently read with consortium lib3mf
 before the bundle is accepted. Tiled packages preserve **assembly positions,
 not a print-bed arrangement**; the assembled extent can exceed tile build bounds.
 See [the format, examples, limits and one-command verification](docs/3mf.md).
-No slicer interoperability or physical printing is claimed.
+Bed-specific Moon exports have PrusaSlicer CLI evidence; other slicers and
+physical printing remain unvalidated.
 
 ## Controls and units
 

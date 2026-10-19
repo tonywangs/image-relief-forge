@@ -1,0 +1,140 @@
+{
+  "source_sha256": "b74f54a459dac07197be97edd8b380c6db26d5b96b1f8a647bcdef84516f175c",
+  "slicer": "PrusaSlicer-2.7.2+UNKNOWN based on Slic3r (with GUI support)",
+  "dimensions_mm": [
+    120,
+    120,
+    3.2
+  ],
+  "tiles": 4,
+  "beds": 2,
+  "margin_mm": 5,
+  "clearance_mm": 3,
+  "repeat_bundles_identical": true,
+  "inspection_profile_sha256": "3f002325f8e586fb0b7909276b9c7453824bb5a131fe73a8bbd783d41e31f10a",
+  "inspections": [
+    {
+      "layer_count": 16,
+      "layer_z_mm": [
+        0.2,
+        0.4,
+        0.6,
+        0.8,
+        1.0,
+        1.2,
+        1.4,
+        1.6,
+        1.8,
+        2.0,
+        2.2,
+        2.4,
+        2.6,
+        2.8,
+        3.0,
+        3.2
+      ],
+      "extrusion_segments_by_tile": {
+        "tile-r001-c001": 38978,
+        "tile-r001-c002": 33688
+      },
+      "extrusion_bounds_mm": [
+        [
+          5.072,
+          5.032,
+          0.2
+        ],
+        [
+          127.92,
+          64.922,
+          3.2
+        ]
+      ],
+      "gcode_sha256": "68afa6546949b467e03bdcd7a8e15910fb2f2c5afa23264c862b34fa384ccece",
+      "preview_sha256": "910e37fe9646ebeec906dac13d9b87cbefd6a5be015f0101dc7c3274f4a04398",
+      "bed": 1,
+      "package_sha256": "0482bedc6cd7da94f21b907f3a431cfba21b183d519574a38514b8987ad45b47",
+      "slicer_roundtrip_bounds_mm": [
+        [
+          5.0,
+          5.0,
+          0.0
+        ],
+        [
+          128.0,
+          65.0,
+          3.200000047683716
+        ]
+      ],
+      "slicer_roundtrip_triangles": 33792,
+      "roundtrip_triangles_match": true,
+      "source_volumes_mm3": [
+        8365.056101430673,
+        8050.207756832242
+      ]
+    },
+    {
+      "layer_count": 16,
+      "layer_z_mm": [
+        0.2,
+        0.4,
+        0.6,
+        0.8,
+        1.0,
+        1.2,
+        1.4,
+        1.6,
+        1.8,
+        2.0,
+        2.2,
+        2.4,
+        2.6,
+        2.8,
+        3.0,
+        3.2
+      ],
+      "extrusion_segments_by_tile": {
+        "tile-r002-c001": 31250,
+        "tile-r002-c002": 39446
+      },
+      "extrusion_bounds_mm": [
+        [
+          5.072,
+          5.072,
+          0.2
+        ],
+        [
+          127.928,
+          64.8,
+          3.2
+        ]
+      ],
+      "gcode_sha256": "aa669fa6afd48e217d7879f90e41198dad6e159aa62fb0e28af1c5bbac62d33c",
+      "preview_sha256": "93fb502c69328afa2f5e57982f2a68791978736f534918b1a3e4c4ecb8671deb",
+      "bed": 2,
+      "package_sha256": "5ffa81fe28c3a4cc3d71081b15a2b59f17bf020d73f7283a1d728bf88482a8db",
+      "slicer_roundtrip_bounds_mm": [
+        [
+          5.0,
+          5.0,
+          0.0
+        ],
+        [
+          128.0,
+          65.0,
+          3.200000047683716
+        ]
+      ],
+      "slicer_roundtrip_triangles": 33792,
+      "roundtrip_triangles_match": true,
+      "source_volumes_mm3": [
+        9210.312999022426,
+        8004.544610454468
+      ]
+    }
+  ],
+  "limitations": [
+    "Headless PrusaSlicer CLI inspection; no GUI inspection or physical printing.",
+    "Generic inspection profile; G-code is not machine-qualified.",
+    "G-code bytes include slicer timestamps and are not deterministic."
+  ]
+}

@@ -30,7 +30,8 @@ key preserves tile identities even when a strip is too narrow to label inside.
 Arrows show the original tile's +X direction. Previews show geometric footprints,
 not simulated printing. `layout.json` reports bed count, rotation, positions and
 utilization. `bed-NNN.3mf` contains only that bed's assigned objects. Consumers
-may rearrange them: we have not tested slicer import behavior.
+may rearrange them. The [Moon example](moon.md) tests PrusaSlicer CLI import
+with `--dont-arrange`; other import workflows remain untested.
 
 ## Packing contract
 
@@ -146,7 +147,8 @@ hashes. Measurements are shared-host observations, not performance guarantees.
 The Linux benchmark runner uses `resource`; cross-platform behavior is untested.
 
 **Unperformed validation:** brims, supports, toolhead clearance, sequential-print
-safety, slicer interoperability and physical printing. Bed layouts do not
+safety and physical printing. PrusaSlicer CLI interoperability for the real-image
+Moon example is recorded separately in [its walkthrough](moon.md). Bed layouts do not
 establish that a printer can safely execute a job. No inference service, private
 data, hardware or paid compute is needed for these examples.
 

@@ -2,5 +2,6 @@ include requirements-dev.txt
 recursive-include fixtures *.png *.jpg *.md
 recursive-include scripts *.py
 recursive-include tests *.py
-recursive-include docs *.md
+recursive-include docs *.md *.svg
 recursive-include results *.json tests.log
+recursive-include examples *.png *.md *.ini

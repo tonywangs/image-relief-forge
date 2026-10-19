@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="764" viewBox="0 0 920 764">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="sans-serif" font-size="14" fill="#182b3a">
+<text x="25" y="25">Bed 2 · 133 × 75 mm · view from +Z</text>
+<text x="25" y="48">+X right, +Y up. Arrows show original tile +X direction.</text>
+<rect x="25" y="70" width="600.0" height="338.34586466165416" fill="#eee" stroke="black"/>
+<rect x="47.55639097744361" y="92.55639097744361" width="554.8872180451128" height="293.23308270676694" fill="none" stroke="#888" stroke-dasharray="4 4"/>
+<rect x="47.55639097744361" y="115.11278195488723" width="270.6766917293233" height="270.6766917293233" fill="#b9dbeb" stroke="#265a75"/>
+<text x="50.55639097744361" y="131.11278195488723">1→</text>
+<text x="25" y="722">1: tile-r002-c001 · 0° CCW · (5, 5) · 60 × 60 mm</text>
+<rect x="331.7669172932331" y="115.11278195488723" width="270.6766917293233" height="270.6766917293233" fill="#b9dbeb" stroke="#265a75"/>
+<text x="334.7669172932331" y="131.11278195488723">2→</text>
+<text x="25" y="744">2: tile-r002-c002 · 0° CCW · (68, 5) · 60 × 60 mm</text>
+</g></svg>
